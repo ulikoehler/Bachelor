@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usetikzlibrary{positioning,arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\usepackage[underline=true,rounded corners=false]{pgf-umlsd}
+\begin{document}
+
+\tikzstyle{block} = [rectangle, text centered]
+\tikzstyle{sum} = [draw, fill=blue!20, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+
+% The block diagram code is probably more verbose than necessary
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+\tikzset{
+  transfer/.style = {block, align=center,fill=blue!40,
+            draw, rectangle, text width=1.5cm,minimum height=8mm},
+  compute/.style = {block, align=center, fill=orange!50,
+            draw, rectangle, text width=2cm,minimum height=8mm},
+  write/.style = {block, align=center,fill=red!40,
+            draw, rectangle, text width=2cm,minimum height=8mm},
+  label/.style = {block, align=center, font=\bfseries},
+  connection/.style = {thick,draw,line width=2pt}
+};
+%Sync
+\node [label] at (-4,0) {Synchronous writes};
+\node [compute] (c1) at (0,0) {Compute};
+\node [transfer, right of=c1] (dt1) {Transfer};
+\node [write, below right=0mm of dt1] (w1) {Write};
+
+\node [compute, above right=0mm of w1] (c2) {Compute};
+\node [transfer, right of=c2] (dt2) {Transfer};
+\node [write, below right=0mm of dt2] (w2) {Write};
+%Time arrow
+\draw [connection, ->] ([yshift=1cm]c1.west) -- ([yshift=18mm]w2.east) node [midway,yshift=0mm,font=\bfseries] {$t$};
+%Async
+\node [label] at (-4,-2) {Asynchronous writes};
+
+\node [compute] (c3) at (0, -2) {Compute};
+\node [transfer, right of=c3] (dt3) {Transfer};
+\node [compute, right of=dt3] (c4) {Compute};
+\node [transfer, right of=c4] (dt4) {Transfer};
+\node [compute, right of=dt4] (c5) {Compute};
+\node [transfer, right of=c5] (dt5) {Transfer};
+
+\node [write, below=0mm of c4] (w3) {Write};
+\node [write, below=0mm of c5] (w4) {Write};
+\end{tikzpicture}
+\end{document}

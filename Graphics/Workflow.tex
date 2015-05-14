@@ -1,0 +1,64 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+
+\usetikzlibrary{positioning}
+\tikzstyle{block} = [draw, fill=orange!50, rectangle, 
+    minimum height=3em, minimum width=6em, rounded corners=3pt]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{pinstyle} = [pin edge={to-,thin,black}]
+
+% The block diagram code is probably more verbose than necessary
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % Entity chain
+    \node [] (UniProt) {UniProt};  
+    \node [above=4mm of UniProt] (OtherEntitySources) {\ldots};
+    \node [block, right=2cm of UniProt, minimum width=4cm] (EntityImport) {Entity import};
+    \node [block, right=1cm of EntityImport, minimum width=3cm] (EntityIndexing) {Entity indexing};
+
+
+    \node [below=35mm of UniProt] (PMC) {PMC};
+    \node [below=4mm of PMC] (OtherDocumentSources) {\ldots};
+    \node [block, below=30mm of EntityImport, minimum width=4cm] (DocumentImport) {Document import};
+    \node [block, right=1cm of DocumentImport, minimum width=3cm] (DocumentIndexing) {Document indexing};
+
+    \node [block, below= 1cm of EntityImport, xshift=20mm] (Database) {Database};
+
+    \node [block, right=1cm of Database, xshift=20mm] (SearchEngine) {Search engine};
+    % We draw an edge between the controller and system block to 
+    % calculate the coordinate u. We need it to place the measurement block. 
+    %\draw [->] (controller) -- node[name=u] {$u$} (system);
+    %\node [output, right of=system] (output) {};
+    %\node [block, below of=u] (measurements) {Measurements};
+
+    % Entity chain
+    \draw [->] (UniProt) -- (EntityImport);
+    \draw [->] (OtherEntitySources) -- (EntityImport);
+    \draw [->] (EntityImport) -- (EntityIndexing);
+
+    \draw [->] (PMC) -- (DocumentImport);
+    \draw [->] (OtherDocumentSources) -- (DocumentImport);
+    \draw [->] (DocumentImport) -- (DocumentIndexing);
+
+    \draw [->] (DocumentImport) -- (Database);
+    \draw [->] (DocumentIndexing) -- (Database);
+    \draw [->] (EntityImport) -- (Database);
+    \draw [->] (EntityIndexing) -- (Database);
+
+    \draw [->] (Database) -- (SearchEngine);
+    %\draw [->] (system) -- node [name=y] {$y$}(output);
+    %\draw [->] (y) |- (measurements);
+    %\draw [->] (measurements) -| node[pos=0.99] {$-$} 
+    %    node [near end] {$y_m$} (sum);
+\end{tikzpicture}
+\end{document}

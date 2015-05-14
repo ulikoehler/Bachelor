@@ -1,0 +1,107 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+
+\usetikzlibrary{positioning}
+\tikzstyle{blueblock} = [draw, fill=blue!30, rectangle,
+    minimum height=3em, minimum width=6em, rounded corners=3pt]
+\tikzstyle{orangeblock} = [draw, fill=orange!50, rectangle,
+    minimum height=3em, minimum width=6em,font=\small, rounded corners=3pt]
+
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % Common top
+    \node [] (V0-1) {\textit{prion} $\longrightarrow$};
+    \node [orangeblock, right=1mm of V0-1] (V1-1) {PMC:123};
+    \node [orangeblock, right=1mm of V1-1] (V2-1) {PMC:456};
+    \node [fit= (V0-1) (V2-1)] (Box1) {};
+    \node [above=1cm of Box1.north, font=\large] (headline1) {Indexer};
+    \draw [->] (headline1) -- node[font=\footnotesize] {emits entries} (Box1);
+
+    %Classical
+    \node [below=2cm of Box1, xshift=3cm] (V1-2) {\textit{prion} $\longrightarrow$};
+    \node [orangeblock, right=1mm of V1-2] (V2-2) {PMC:123};
+    \node [orangeblock, right=1mm of V2-2] (V3-2) {PMC:456};
+    \node [blueblock, right=1mm of V3-2] (V4-2) {PMC:987};
+
+    %PRIMORDIAL block
+    \node [below=2.8cm of Box1, xshift=-6cm] (V1-3) {\textit{prion} $\longrightarrow$};
+
+    \node [orangeblock, right=3mm of V1-3, yshift=8mm] (V2-3) {PMC:123};
+    \node [orangeblock, right=1mm of V2-3] (V3-3) {PMC:456};
+    \node [draw, dashed, fit= (V2-3) (V3-3), inner sep=2mm] (Box3) {};
+
+    \node [blueblock, below=4mm of Box3] (V4-2) {PMC:987};
+    \node [draw, dashed, fit=(V4-2), inner sep=2mm] (Box4) {};
+
+    %Legend
+    \node [orangeblock, right=45mm of headline1, yshift=-5mm] (L1) {New entry};
+    \node [blueblock, right=1mm of L1] (L2) {Existing entry};
+    \node [draw, dashed, rounded corners=3pt, xshift=5mm, below=1mm of L1, minimum height=3em,] (L3) {Unevaluated write};
+    \node [draw, dotted, fit=(L1) (L2) (L3), inner sep=4mm, yshift=3mm] (LBox) {};
+    \node [font=\small,anchor=north west] at (LBox.north west) {Legend};
+
+
+    %Edges
+    \draw [] (Box1) edge[out=270,in=90,->] node[xshift=25mm,font=\footnotesize] {Classical indexing} (V2-2);
+    \draw [] (Box1) edge[out=270,in=90,->] node[xshift=-20mm,yshift=5mm,font=\footnotesize] {PRIMORDIAL}  (Box3);
+
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \draw[dotted] (-4,-6) -- (12,-6); 
+
+    %Search
+    \node [below=8cm of headline1,xshift=10mm, font=\large] (headline2) {Search for \textit{"prion"}};
+
+    %PRIMORDIAL block
+
+    \node [blueblock, below=2cm of headline2, xshift=-7cm] (S2-3) {PMC:123};
+    \node [blueblock, right=1mm of S2-3] (S3-3) {PMC:456};
+    \node [draw, dashed, fit= (S2-3) (S3-3), inner sep=2mm] (SBox1) {};
+
+    \node [blueblock, right=3mm of SBox1] (S4-2) {PMC:987};
+    \node [draw, dashed, fit=(S4-2), inner sep=2mm] (SBox2) {};
+
+
+
+    \node [blueblock, below=3cm of SBox1.west, anchor=west, xshift=2mm] (S2-P) {PMC:123};
+    \node [blueblock, right=1mm of S2-P] (S3-P) {PMC:456};
+    \node [blueblock, right=1mm of S3-P] (S4-P) {PMC:987};
+    \node [fit= (S2-P) (S4-P), inner sep=2mm] (SBox3) {};
+
+
+
+    %Classical block
+
+    \node [blueblock, below=2cm of headline2, xshift=5cm] (S2-C) {PMC:123};
+    \node [blueblock, right=1mm of S2-C] (S3-C) {PMC:456};
+    \node [blueblock, right=1mm of S3-C] (S4-C) {PMC:987};
+    \node [fit= (S2-C) (S4-C), inner sep=2mm] (SBox2) {};
+
+    %Edges
+    %\draw [] (Box1) edge[out=270,in=90,->] node[xshift=25mm,font=\footnotesize] {Classical indexing} (V2-2);
+    \draw [] (headline2) edge[out=270,in=90,->] node[xshift=-5mm,yshift=8mm,font=\footnotesize] {PRIMORDIAL lookup}  (SBox1);
+    \draw [] (headline2) edge[out=270,in=90,->] node[xshift=15mm,yshift=2mm,font=\footnotesize] {Classical lookup}  (SBox2);
+
+
+    \draw [] (SBox1) edge[out=270,in=90,->] node[xshift=0mm,yshift=0mm,font=\footnotesize] {Evaluation via merge operator}  (SBox3);
+
+
+    \node [below=8cm of headline2, font=\large] (headline3) {Send result to client};
+
+
+    \draw [] (SBox2) edge[out=270,in=90,->]  (headline3);
+    \draw [] (SBox3) edge[out=270,in=90,->] (headline3);
+
+
+\end{tikzpicture}
+\end{document}

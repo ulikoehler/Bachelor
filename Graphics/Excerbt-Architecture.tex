@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+
+\usetikzlibrary{positioning}
+\tikzstyle{orangeblock} = [rounded corners=3pt, draw, fill=orange!50, rectangle,
+    minimum height=3em, minimum width=6em,font=\small]
+\tikzstyle{blueblock} = [rounded corners=3pt, draw, fill=blue!50, rectangle,
+    minimum height=3em, minimum width=20mm,font=\small]
+
+% The block diagram code is probably more verbose than necessary
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    %
+    % Entity chain
+    \node [orangeblock,minimum width=2cm, xshift=10cm] (Excerbt) {Excerbt server};
+    \node [orangeblock,minimum width=4cm, below=0mm of Excerbt.south, anchor=north] (HBase) {HBase};
+    \node [orangeblock,minimum width=5cm, below=0mm of HBase.south, anchor=north] (Hadoop) {Hadoop};
+
+
+    \node [blueblock, below=15mm of Hadoop, xshift=-2.5cm] (Server1) {Server 1};
+    \node [blueblock, right=5mm of Server1] (Server2) {Server 2};
+    \node [blueblock, right=5mm of Server2] (Server3) {Server 3};
+
+    % We draw an edge between the controller and system block to 
+    % calculate the coordinate u. We need it to place the measurement block. 
+    \draw [<->] (Hadoop) -- (Server1);
+    \draw [<->] (Hadoop) -- (Server2);
+    \draw [<->] (Hadoop) -- (Server3);
+    %\node [output, right of=system] (output) {};
+    %\node [block, below of=u] (measurements) {Measurements};
+
+    % Entity chain
+    %\draw [->] (system) -- node [name=y] {$y$}(output);
+    %\draw [->] (y) |- (measurements);
+    %\draw [->] (measurements) -| node[pos=0.99] {$-$} 
+    %    node [near end] {$y_m$} (sum);
+\end{tikzpicture}
+\end{document}

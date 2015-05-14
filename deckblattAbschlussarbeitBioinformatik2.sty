@@ -1,0 +1,206 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DAtitlepage style file
+%
+% LaTeX class zur Erzeugung der Titelseite einer Diplomarbeit,
+% Bachelorarbeit, Masterarbeit, ... für den Studiengang Bioinformatik an
+% den beiden Münchener Universitäten.
+%
+% Author
+%
+%      Klaus Holzapfel (Klaus.Holzapfel@in.tum.de)
+%      Institut für Informatik
+%      Technische Universität München, Germany
+%
+% All rights reserved.
+%
+% Last Modified: February 17th, 2004 by V.Heun
+%                December  8th, 2004 by V.Heun
+%                January  20th, 2010 by V.Heun
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% USAGE:
+%
+% \usepackage{deckblattAbschlussarbeitBioinformatik}
+% \usepackage[color]{deckblattAbschlussarbeitBioinformatik}
+%
+% \maketitlepage{Art der Arbeit (Diplomarbeit, Bachelorarbeit ...)}
+%               {Institut; Lehrstuhl}
+%               {Titel}
+%               {Name des Studenten}
+%               {Name des Aufgabenstellers}
+%               {Name des Betreuers}
+%               {Abgabedatum}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+\ProvidesPackage{deckblattAbschlussarbeitBioinformatik2}[2010/01/20]
+\typeout{--- `deckblattAbschlussarbeitBioinformatik2' style for 'Abschlussarbeiten in der Bioinformatik' ---}
+
+\RequirePackage{pstricks}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%
+%%%% SIZES, FONTS, COLORS ...
+%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newif\ifcolor\colorfalse
+\DeclareOption{color}{\colortrue}
+\ProcessOptions\relax
+
+\newgray{lmutumgray}{0.65}
+\newcmykcolor{lmugreen}{1.0 0.0 0.95 0.5}
+\newcmykcolor{tumblue}{1 0.43 0 0}
+\font\headerfont=phvr at 16pt
+%\font\headerfont=cmss17 at 16pt
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% LMU-Logo
+%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newcommand{\lmulogo}[2][\ifcolor lmugreen\else lmutumgray\fi]{%
+\newcommand{\lmulogo}[2][\ifcolor lmugreen\else lmugreen\fi]{%
+\def\L{\pspolygon*(0.0,0.38)(0,0)(0.15,0)(0.15,0.025)(0.025,0.025)%
+                  (0.025,0.38)}%
+\def\MM{\pspolygon*(0,0)(0,0.38)(0.1,0.38)(0.175,0.1)(0.25,0.38)(0.35,0.38)%
+                   (0.35,0)(0.3,0)(0.3,0.35)(0.2,0)(0.15,0)(0.05,0.35)(0.05,0)}%
+\def\UUU{\pspolygon(0,0.10)(0.1,0.10)(0.1,0.38)(0,0.38)%
+         \pspolygon(0.2,0.10)(0.3,0.10)(0.3,0.38)(0.2,0.38)%
+         \psclip{%
+           \pscustom[linestyle=none,fillstyle=none]{%
+             \psarc(0.15,0.125){0.05}{180}{0}%
+             \psline(0.2,0.125)(0.3,0.125)%
+             \psline(0.3,0.125)(0.3,-0.01)%
+             \psline(0.3,-0.01)(0,-0.01)%
+             \psline(0,-0.01)(0,0.125)%
+             \psline(0,0.125)(0.1,0.125)%
+           }%
+         }%
+         \psellipse(0.15,0.09)(0.15,0.1)%
+         \endpsclip%
+         %\psarc*(0.15,0.15){0.15}{180}{0}%
+         %\psset{fillcolor=white,linecolor=white,linestyle=none}%
+         %\psarc(0.15,0.125){0.05}{180}{0}%
+         %\pspolygon(0.1,0.2)(0.2,0.2)(0.2,0.125)(0.1,0.125)
+        }%
+  \newdimen\actdim\actdim#2 \multiply\actdim by 10 \divide\actdim by 9%
+  \psset{unit=\actdim,linewidth=0,linestyle=none,linecolor=#1,%
+         fillstyle=solid,fillcolor=#1}%
+  \begin{pspicture}(0.1,0)(0.9,0.38)%
+    \rput[lb](0.0,0){\L}%
+    \rput[lb](0.2,0){\MM}%
+    \rput[lb](0.6,0){\UUU}%
+  \end{pspicture}}%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%
+%%%% TUM-LOGOS
+%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\TUM#1{%
+\dimen1=#1\dimen1=.1143\dimen1%
+\dimen2=#1\dimen2=.419\dimen2%
+\dimen3=#1\dimen3=.0857\dimen3%
+\dimen4=\dimen1\advance\dimen4 by\dimen2%
+\setbox0=\vbox{\hrule width\dimen3 height\dimen1 depth0pt\vskip\dimen2}%
+\setbox1=\vbox{\hrule width\dimen1 height\dimen4 depth0pt}%
+\setbox2=\vbox{\hrule width\dimen3 height\dimen1 depth0pt}%
+\setbox3=\vtop{\vskip0pt\hbox{\copy0\copy1\copy0\copy1\box2\copy1\copy0\copy1\box0\box1}}%
+%\leavevmode{\ifcolor\tumblue\else\lmutumgray\fi\box3}}
+\leavevmode{\ifcolor\tumblue\else\tumblue\fi\box3}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%
+%%%% LMU-TUM-Header
+%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\lmutumheader{
+  \hbox to 16.5cm{
+  \raisebox{-12mm}{\lmulogo{2.75cm}}\hfil\hskip4mm
+    
+  %\raisebox{-12mm}{\includegraphics[width=2.75cm]{lmulogo2.png}}\hfil\hskip4mm
+    \hbox to 9.1cm{\vtop{\vskip0pt
+        \hbox to 9.1cm
+        {\hss\headerfont
+          LUDWIG-MAXIMILIANS-UNIVERSIT{\kern-.1em}\"A{\kern-.1em}T
+          \hss}
+        \vskip1mm
+        \hbox to 9.1cm
+        {\hss\headerfont
+          TECHNISCHE\ UNIVERSIT{\kern-.1em}\"A{\kern-.1em}T\ M\"UNCHEN
+          \hss}}%
+    }%
+    \hskip2mm\hfil\TUM{2.2cm}}}
+	%\includegraphics[width=2.2cm]{tumlogoNew.png}}}
+	%\hskip2mm\hfil \includegraphics[width=2.2cm]{tumlogoNew.png}}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%
+%%%% Deckblatt
+%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand\maketitlepage[7]{{
+\clearpage
+\thispagestyle{empty}
+\sffamily
+\centerline{\lmutumheader}
+\vfill
+\begin{center}\LARGE
+  \textbf{#2}                    % Institut; Lehrstuhl
+\end{center}
+\vfill
+\begin{center}\LARGE
+  #1\\                           % Art der Arbeit
+  {\Large in Bioinformatik}\\*[2cm]
+%hier war 10cm
+  \begin{minipage}{15cm}
+    \begin{center}
+      \LARGE\textbf{#3}          % Titel der Arbeit
+    \end{center}
+  \end{minipage}
+  \vskip1cm
+  {\LARGE\textsl{#4}}            % Name des Studenten
+\end{center}
+\vfill
+\begin{center}\large
+  \begin{tabular}{ll}
+    Aufgabensteller: & #5        % Name des Aufgabenstellers
+    \\
+    Betreuer:        & #6        % Name des Betreuers
+    \\
+    Abgabedatum:     & #7        % Abgabedatum
+  \end{tabular}
+\end{center}
+\vskip1cm
+%\clearpage
+\cleardoublepage
+\textbf{ }
+%\newpage
+%% Erklärung
+\vspace*{3cm}
+\begin{center}
+\begin{minipage}{9.8cm}
+  \large
+  Ich versichere, dass ich diese
+    #1                           % Art der Arbeit
+  selbst\"andig verfasst und nur
+  die angegebenen Quellen und Hilfsmittel
+  verwendet habe.
+  \vskip2cm
+  \hfill
+  \begin{tabular}{lc}
+    #7                           % Abgabedatum
+    & \rule{6cm}{1pt} \\
+    & #4                      % Name des Studenten
+  \end{tabular}
+ \end{minipage}
+\end{center}
+\cleardoublepage
+}}
+
+\endinput

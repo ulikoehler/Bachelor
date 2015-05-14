@@ -1,0 +1,90 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\usepackage{pifont}
+\usepackage{amssymb}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+
+\newcommand{\xmark}{\ding{55}}%
+
+\usetikzlibrary{positioning}
+\tikzstyle{block} = [draw, dashed, rectangle, 
+    minimum height=2em,rounded corners=3pt]
+\tikzstyle{writereq} = [block]
+\tikzstyle{output} = [blocke]
+
+% The block diagram code is probably more verbose than necessary
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % Indexing
+    \node [block] (V1-1) {prion};
+    \node [right=0mm of V1-1.east, anchor=west] (V2-1) {diseases $|$ MeSH:D017096};
+    \node [below=20mm of V1-1.west, anchor=west] (V3-1) {prion $\longrightarrow$ prion diseases $|$ MeSH:D017096};
+    \draw [->] (V1-1) edge[out=270,in=90,->]  node[xshift=8mm,font=\footnotesize] {Index only first token} (V3-1);
+
+    \node [draw, dashed, fit= (V1-1) (V2-1) (V3-1), inner sep=5mm, yshift=3mm] (Box1) {};
+    \node [font=\small,anchor=north west] at (Box1.north west) {Indexing};
+
+
+    \node [below=4cm of V1-1.west, anchor=west] (V1-2) {"The $PrP^{Sc}$};
+    \node [block,right=0mm of V1-2.east, anchor=west, yshift=-0.5mm] (V2-2) {prion};
+    \node [right=0mm of V2-2.east, anchor=west, yshift=0.2mm] (V3-2) {causes ovine};
+    \node [block,right=0mm of V3-2.east, anchor=west, yshift=-0.5mm] (V4-2) {prion};
+    \node [right=0mm of V4-2.east, anchor=west, yshift=0.5mm] (V5-2) {diseases"};
+    %\node [right=0mm of V1-1.east, anchor=west] (V2-2) {diseases $|$ MeSH:D017096};
+    %\node [below=20mm of V1-1.west, anchor=west] (V3-2) {prion $\longrightarrow$ prion diseases $|$ MeSH:D017096};
+
+
+    %Lookup
+    \node [below=15mm of V3-2.south, anchor=north] (V1-3) {prion diseases $|$ MeSH:D017096};
+
+    \draw [->] (V2-2) edge[out=270,in=90,->]  (V1-3);
+    \draw [->] (V4-2) edge[out=270,in=90,->]  node[font=\footnotesize] {Index lookup} (V1-3);
+
+    %1st hit
+    \node [below=1cm of V1-3.south, anchor=north, xshift=-4cm] (V1-4) {\textbf{Index:}};
+    \node [block,right=0mm of V1-4.east, anchor=west, yshift=-0.5mm] (V2-4) {prion};
+    \node [block,right=1mm of V2-4.east, anchor=west] (V3-4) {diseases};
+
+    \node [below=5mm of V1-4.south, anchor=north] (V4-4) {\textbf{Text:}};
+    \node [block,below=5mm of V2-4.south west, anchor=west, yshift=-1mm] (V5-4) {prion};
+    \node [below=5mm of V3-4.south west, anchor=west, yshift=-1mm] (V6-4) {causes};
+
+    \node [below=5mm of V4-4.south, anchor=north] (V7-4) {\textbf{Match:}};
+    \node [below=3mm of V5-4.south] (V8-4) {\checkmark};
+    \node [below=3mm of V6-4.south, yshift=-1.5mm] (V9-4) {\xmark};
+
+    %2nd hit
+    \node [right=3.5cm of V1-4.east, anchor=west] (V1-5) {\textbf{Index:}};
+    \node [block,right=0mm of V1-5.east, anchor=west, yshift=-0.5mm] (V2-5) {prion};
+    \node [block,right=1mm of V2-5.east, anchor=west] (V3-5) {diseases};
+
+    \node [below=5mm of V1-5.south, anchor=north] (V4-5) {\textbf{Text:}};
+    \node [block,below=5mm of V2-5.south west, anchor=west, yshift=-1mm] (V5-5) {prion};
+    \node [block,below=5mm of V3-5.south west, anchor=west, yshift=-1mm] (V6-5) {diseases};
+
+    \node [below=5mm of V4-5.south, anchor=north] (V7-5) {\textbf{Match:}};
+    \node [below=3mm of V5-5.south] (V8-5) {\checkmark};
+    \node [below=3mm of V6-5.south] (V9-5) {\checkmark};
+
+    \draw [] (V1-3.south) edge[out=270,in=90,->]  (V2-4);
+    \draw [] (V1-3.south) edge[out=270,in=90,->]  node[xshift=12mm, yshift=-1mm, font=\footnotesize] {Postprocessing} (V2-5);
+
+
+    %Result
+    \node [below=5cm of V1-3.south, anchor=north] (V1-6) {Found \textit{"prion diseases"} starting at token 6};
+    \draw [] (V8-5.south east) edge[out=270,in=90,->]  (V1-6);
+
+    %NER Box
+    \node [draw, dashed, fit= (V1-2) (V5-2) (V9-4) (V1-6), inner sep=5mm, yshift=3mm] (Box1) {};
+    \node [font=\small,anchor=north west] at (Box1.north west) {NER};
+
+\end{tikzpicture}
+\end{document}

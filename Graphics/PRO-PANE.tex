@@ -1,0 +1,56 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+
+\usetikzlibrary{positioning}
+\tikzstyle{block} = [draw, fill=orange!30, rectangle, 
+    minimum height=3em,rounded corners=3pt]
+\tikzstyle{writereq} = [block]
+\tikzstyle{output} = [blocke]
+
+% The block diagram code is probably more verbose than necessary
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+
+
+
+    % Entity chain
+    \node [block] (V1-1) {\textit{ID}: \texttt{PMC:12345}};
+    \node [block, below=1mm of V1-1.south west, anchor=north west] (V2-1) {\textit{Authors}: \texttt{Yang et al.}};
+    \node [block, below=1mm of V2-1.south west, anchor=north west] (V3-1) {\textit{Title}: \texttt{Analysis of ovine prion diseases}};
+    \node [block, below=1mm of V3-1.south west, anchor=north west] (V4-1) {\textit{Text}: \texttt{The $PrP^{Sc}$ prion continues to pose a health threat for sheep. [...]}};
+
+    \node [draw, dashed, fit= (V1-1) (V2-1) (V3-1) (V4-1), inner sep=5mm] (Box1) {};
+    \node [font=\small,anchor=north west] at (Box1.north west) {Document};
+
+
+    \node [block, below=20mm of V4-1.south west, anchor=north west] (V1-2) {text:prion ${\longrightarrow}$ PMC:12345};
+    \node [block, below=1mm of V1-2.south west, anchor=north west] (V2-2) {text:sheep ${\longrightarrow}$ PMC:12345};
+    \node [block, below=1mm of V2-2.south west, anchor=north west] (V3-2) {title:prion ${\longrightarrow}$ PMC:12345};
+    \node [block, below=1mm of V3-2.south west, anchor=north west] (V4-2) {meta:yang ${\longrightarrow}$ PMC:12345};
+    \node [draw, dashed, fit= (V1-2) (V2-2) (V3-2) (V4-2), inner sep=5mm] (Box2) {};
+    \node [font=\small,anchor=north west] at (Box2.north west) {Index};
+
+    \node [block, below=20mm of V4-2.south west, anchor=north west] (V1-3) {text:prion ${\longrightarrow}$ PMC:12345};
+    \node [block, below=1mm of V1-3.south west, anchor=north west] (V2-3) {title:prion ${\longrightarrow}$ PMC:12345};
+    \node [draw, dashed, fit= (V1-3) (V2-3), inner sep=5mm] (Box3) {};
+    \node [font=\small,anchor=north west] at (Box3.north west) {Lookup result};
+
+    \draw [->] (Box1) edge[out=270,in=30,->] node {Indexing (excerpt)} (Box2);
+    \draw [->] (Box2) edge[out=330,in=30,->] node {Search for \textit{"prion"}} (Box3);
+
+    %Result
+    \node [font=\small,below=2cm of Box3.south west, anchor=west] (Result) {\textbf{Result}: PMC:12345 (hit location: title), PMC:12345 (hit location: text)};
+    \draw [->] (Box2) edge[out=330,in=30,->] node {Search for \textit{"prion"}} (Box3);
+
+    \draw [->] (Box3) edge[out=270,in=90,->] node {Sort: Priority(\texttt{title})\ $>$\ Priority(\texttt{text})} (Result);
+\end{tikzpicture}
+\end{document}

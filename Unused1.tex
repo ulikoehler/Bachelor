@@ -1,0 +1,34 @@
+
+\subsubsection{Faster distributed }\label{sssec:job-overhead}
+
+When a computing job is run on a Hadoop dataset (for instance, on an HBase table), the input dataset is first split into \textit{input splits} for distributed processing. In practice, there are two types of jobs:
+
+\begin{boxedDefinition}[Symmetrical / asymmetrical job]\label{def:workloads}
+ A computing job is defined to be symmmetrical if (in equation \eqref{eq:nodetime}):
+ \begin{equation}
+ r(a) &\approx r(b)\ \forall\ a,b \in B\\
+ \end{equation}
+ i.e. 
+ 
+\end{boxedDefinition}
+
+A high replication factor is especially important for jobss where a constant amount of data consumes a non-constant amount of computer time\footnote{computer time is defined as the actual amount of time consumed by performing some task. This not only includes CPU time but also I/O and idle times.}.
+
+\begin{align}\label{eq:nodetime}
+\begin{split}
+ \Delta t(n) &= O_c(n) + \sum_{s \in B(n)} t(s) + O_b(n, s) \\\\
+ \text{where~} \Delta t(n) &: \text{computer time consumed during the job on node $n$}\\
+ t(s) &: \text{computer time consumed while processing split $s$ on node $n$}\\
+ O_c(n) &: \text{Constant overhead of processing the job on node $n$}\\
+ O_s(n, s) &: \text{Split overhead of processing split $s$ on node $n$}\\
+ B(n) &: \text{Set of all splits being processed on node $n$}
+\end{split}
+\end{align}
+
+Equation \eqref{eq:nodetime} defines the amount of time consumed on a node for an arbitrary single job. The overhead symbol $O_c(n)$ represents time consumed by node initialization and finishing the job, i.e. starting the worker process, writing output data and similar system-specific actions while $O_s(n, s)$ represents time consumed by initializing the worker to process the block $b$. For simplicity, we assume that 
+
+If the system is not aware of the amount of time that is required to process any single input split\footnote{Input split is the Hadoop terminology for a chunk of data that is processed by a single worker process} in advance, its scheduling is likely to be suboptimal.
+
+When a single datablock takes more computer time than anticipated by the system, the worker processing said block delays the processing of further blocks until the current block is finished. Other workers might finish their work faster than anticipated by the scheduler and therefore might need to fetch data over the network from those workers who take more time than expected -- unless the number of replicas is set sufficiently high so the data is already available on the target node.
+
+For symmetrical workloads, i.e. where the time of processing a defined amount of data is constant independent of the content of the datablock, no datablocks need to be transferred during the computing job\footnote{This does not include other transfers due to mechanisms as MapReduce} if the amount of data is approximately equal on all nodes. Assuming a homogeneous cluster, this is true only if the cluster is balanced, i.e. if the amount of data is well-distributed over the cluster (see \cite[section 7]{white2009hadoop}). For asymmetric load, unbalanced clusters wou TODO

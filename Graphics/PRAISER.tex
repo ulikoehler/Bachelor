@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+
+\usetikzlibrary{positioning}
+\tikzstyle{block} = [draw, fill=orange!30, rectangle, 
+    minimum height=3em,rounded corners=3pt]
+\tikzstyle{writereq} = [block]
+\tikzstyle{output} = [blocke]
+
+% The block diagram code is probably more verbose than necessary
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+
+
+
+    % Entity chain
+    \node [block] (V1-1) {Val1};
+    \node [block, right=1mm of V1-1] (V2-1) {Val2};
+    \node [block, right=1mm of V2-1] (V3-1) {Val2};
+    \node [block, right=1mm of V3-1] (V4-1) {Val1};
+
+    \node [draw, dashed, fit= (V1-1) (V2-1) (V3-1) (V4-1), inner sep=2mm] (Box1) {};
+
+
+    \node [block, below=15mm of V2-1] (V1-2) {Val2};
+    \node [block, right=1mm of V1-2] (V2-2) {Val1};
+
+    \node [draw, dashed, fit= (V1-2) (V2-2), inner sep=2mm] (Box2) {};
+
+    \node [block, below=15mm of V1-2] (V1-3) {Val1};
+    \node [block, right=1mm of V1-3] (V2-3) {Val2};
+
+    \node [draw, dashed, fit= (V1-3) (V2-3), inner sep=2mm] (Box3) {};
+
+    \draw [->] (Box1) -- node {Create set} (Box2);
+    \draw [->] (Box2) -- node {Sort elements} (Box3);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+
+\usetikzlibrary{positioning}
+\tikzstyle{block} = [draw, fill=orange!30, rectangle, 
+    minimum height=3em, minimum width=6em, rounded corners=3pt]
+\tikzstyle{writereq} = [block, ]
+\tikzstyle{output} = [blocke]
+
+% The block diagram code is probably more verbose than necessary
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    % Entity chain
+    \node [writereq, align=center] (Write1) {\textbf{Write request}\\\textit{value 1}};
+    \node [writereq, right=1cm of Write1, align=center] (Write2) {\textbf{Write request}\\\textit{value 2}};
+
+    \node [writereq, yshift=-2cm, align=center] (MO) at ($(Write1)!0.5!(Write2)$) {\textbf{Merge operator}\\\texttt{Append}};
+
+    \node [writereq, below=1cm of MO, align=center] (Result) {\textbf{Result}\\\textit{value1value2}};
+
+    % Entity chain
+
+    \draw [->] (Write1) -- (MO);
+    \draw [->] (Write2) -- (MO);
+    \draw [->] (MO) -- (Result);
+\end{tikzpicture}
+\end{document}

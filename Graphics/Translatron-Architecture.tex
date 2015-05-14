@@ -1,0 +1,70 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+
+\usetikzlibrary{positioning}
+\tikzstyle{orangeblock} = [rounded corners=3pt, draw, fill=orange!50, rectangle,
+    minimum height=3em, minimum width=6em,font=\small]
+\tikzstyle{blueblock} = [rounded corners=3pt, draw, fill=blue!50, rectangle,
+    minimum height=3em, minimum width=20mm,font=\small]
+\tikzstyle{whiteblock} = [rounded corners=3pt, draw, fill=white, rectangle,
+    minimum height=3em, minimum width=10mm,font=\footnotesize]
+
+% The block diagram code is probably more verbose than necessary
+\begin{tikzpicture}[auto, node distance=2cm,>=latex']
+    %
+    % Entity chain
+    \node [orangeblock,minimum width=2cm, xshift=10cm] (BrowserClient) {Browser client};
+
+    \node [orangeblock,below=2cm of BrowserClient.south, anchor=north,minimum width=10cm, minimum height=5cm] (Translatron) {};
+    \node [font=\small,anchor=north west] at (Translatron.north west) {Translatron};
+
+
+    \node [whiteblock, below=2mm of Translatron.north] (Webserver) {Webserver / Websocket interface};
+
+    \node [whiteblock, below=18mm of Translatron.north, xshift=-3.5cm] (FTS) {Full-text search};
+    \node [whiteblock, below=18mm of Translatron.north, xshift=-5mm] (Corpus) {Text Corpus};
+    \node [whiteblock, below=18mm of Translatron.north, xshift=2cm] (NER) {NER};
+    \node [whiteblock, below=18mm of Translatron.north, xshift=4cm] (Ontology) {Ontology};
+
+    \draw [<->] (FTS) -- (Corpus);
+    \draw [<->] (NER) -- (Ontology);
+
+    \node [whiteblock, below=4mm of FTS, xshift=12mm] (DocumentIDX) {Document indexing};
+    \draw [<->] (FTS) -- (DocumentIDX);
+    \draw [<->] (Corpus) -- (DocumentIDX);
+
+
+    \node [whiteblock, below=4mm of NER, xshift=12mm] (EntityIDX) {Entity indexing};
+    \draw [<->] (NER) -- (EntityIDX);
+    \draw [<->] (Ontology) -- (EntityIDX);
+
+    \node [orangeblock,minimum width=5cm, below=2cm of Translatron.south, anchor=north] (YakDB) {YakDB};
+
+    \draw [<->] (YakDB) --  node {{\O}MQ} (Translatron);
+    \draw [<->] (BrowserClient) --  node {HTTP/Websockets} (Translatron);
+
+    % We draw an edge between the controller and system block to 
+    % calculate the coordinate u. We need it to place the measurement block. 
+    %\draw [<->] (Hadoop) -- (Server1);
+    %\draw [<->] (Hadoop) -- (Server2);
+    %   \draw [<->] (Hadoop) -- (Server3);
+    %\node [output, right of=system] (output) {};
+    %\node [block, below of=u] (measurements) {Measurements};
+
+    % Entity chain
+    %\draw [->] (system) -- node [name=y] {$y$}(output);
+    %\draw [->] (y) |- (measurements);
+    %\draw [->] (measurements) -| node[pos=0.99] {$-$} 
+    %    node [near end] {$y_m$} (sum);
+\end{tikzpicture}
+\end{document}
