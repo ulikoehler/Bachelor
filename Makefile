@@ -7,7 +7,7 @@ Thesis.dvi: Thesis.tex
 	latex Thesis.tex
 
 Thesis.pdf: Thesis.dvi
-	dvipdf Thesis.dvi Thesis.pdf
+	dvipdf -dAutoRotatePages=/None Thesis.dvi Thesis.pdf
 
 pdf: Thesis.pdf
 
